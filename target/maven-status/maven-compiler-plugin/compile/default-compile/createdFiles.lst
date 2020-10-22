@@ -1,0 +1,11 @@
+operations/WriteJSONToBigQuery$JsonToTableRow.class
+common/operations/GenericPrinter.class
+operations/WriteJSONToBigQuery.class
+operations/WriteJSONToBigQuery$1.class
+operations/StreamingDocumentSource.class
+operations/WriteJSONToBigQuery$BQFailureAdder.class
+common/bigquery/BQTypeConstants.class
+operations/CSVFileToJSONConverter.class
+operations/StreamingDocumentSource$GCSMutex.class
+pipelines/DeltaETL.class
+pipelines/config/DeltaETLPipelineOptions.class
