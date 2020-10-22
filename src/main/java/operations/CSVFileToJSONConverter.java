@@ -2,17 +2,25 @@ package operations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import models.FailSafeElement;
 import org.apache.beam.sdk.io.FileIO;
-import org.apache.beam.sdk.transforms.*;
+import org.apache.beam.sdk.transforms.DoFn;
 
 import java.io.BufferedReader;
 import java.nio.channels.Channels;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Laurens on 20/10/20.
+ *
+ * Custom {@link org.apache.beam.sdk.transforms.PTransform} to pre-process a CSV file
+ * and yield JSON elements. Note that the transform assumes that the first line
+ * of the file is the header.
  */
-public class CSVFileToJSONConverter extends DoFn<FileIO.ReadableFile, String> {
+public class CSVFileToJSONConverter extends DoFn<FileIO.ReadableFile, FailSafeElement<String, String>> {
 
     private final String delimiter;
 
@@ -29,7 +37,7 @@ public class CSVFileToJSONConverter extends DoFn<FileIO.ReadableFile, String> {
             String line;
 
             while ((line = br.readLine()) != null) {
-                c.output(CSVToJSON(header, line));
+                c.output(new FailSafeElement<>(f.getMetadata().resourceId().getFilename(), CSVToJSON(header, line)));
             }
 
         } catch (Exception e) {

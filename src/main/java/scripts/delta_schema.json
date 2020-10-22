@@ -1,0 +1,22 @@
+[
+  {
+    "mode": "NULLABLE",
+    "name": "source",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "first",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "second",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "third",
+    "type": "STRING"
+  }
+]

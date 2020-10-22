@@ -12,13 +12,13 @@ public interface DeltaETLPipelineOptions extends DataflowPipelineOptions {
 
     @Description("Input directory")
     @Validation.Required
-    @Default.String("gs://detl/deltas/*")
+    @Default.String("gs://delta-etl/*")
     String getInputDirectory();
     void setInputDirectory(String value);
 
     @Description("Mutex bucket name")
     @Validation.Required
-    @Default.String("gs://detl-locks")
+    @Default.String("gs://delta-etl-locks")
     String getMutexDirectory();
     void setMutexDirectory(String value);
 
@@ -30,13 +30,13 @@ public interface DeltaETLPipelineOptions extends DataflowPipelineOptions {
 
     @Description("BigQuery output table")
     @Validation.Required
-    @Default.String("geometric-ocean-284614:detl.deltas")
+    @Default.String("geometric-ocean-284614:delta_etl.deltas")
     String getOutputTable();
     void setOutputTable(String value);
 
     @Description("BigQuery output dead-letter table")
     @Validation.Required
-    @Default.String("geometric-ocean-284614:detl.delta_failed")
+    @Default.String("geometric-ocean-284614:delta_etl.deltas_failed")
     String getDeadLetterTable();
     void setDeadLetterTable(String value);
 }
