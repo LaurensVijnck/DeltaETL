@@ -1,9 +1,0 @@
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/operations/WriteJSONToBigQuery.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/common/bigquery/BQTypeConstants.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/models/coders/FailSafeElementCoder.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/pipelines/DeltaETL.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/common/operations/GenericPrinter.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/pipelines/config/DeltaETLPipelineOptions.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/models/FailSafeElement.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/operations/StreamingDocumentSource.java
-/Users/lvijnck/Desktop/DeltaETL/src/main/java/operations/CSVFileToJSONConverter.java
