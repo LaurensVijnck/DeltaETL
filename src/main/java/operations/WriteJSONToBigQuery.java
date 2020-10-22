@@ -23,7 +23,7 @@ import java.util.Arrays;
  * Created by Laurens on 20/10/20.
  *
  * Failsafe {@link PTransform} to write objects the BigQuery {@code OutputTable}. The transform is configured
- * by the {@code bqFormatFn function that maps the input elements onto BigQuery rows. The transform assumes
+ * by the {@code bqFormatFn} function that maps the input elements onto BigQuery rows. The transform assumes
  * that the destination table is already present. Failed inserts are routed to the {@code deadLetterTable}.
  */
 public class WriteJSONToBigQuery<InputT> extends PTransform<PCollection<InputT>, PDone> {
