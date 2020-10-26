@@ -39,4 +39,10 @@ public interface DeltaETLPipelineOptions extends DataflowPipelineOptions {
     @Default.String("geometric-ocean-284614:delta_etl.deltas_failed")
     String getDeadLetterTable();
     void setDeadLetterTable(String value);
+
+    @Description("Deduplication interval in seconds")
+    @Validation.Required
+    @Default.Integer(10)
+    Integer getDeduplicationIntervalSeconds();
+    void setDeduplicationIntervalSeconds(Integer value);
 }

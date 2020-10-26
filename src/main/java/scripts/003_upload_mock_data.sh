@@ -2,4 +2,4 @@
 
 BUCKET_NAME=delta-etl
 
-gsutil cp src/main/resources/data/*.csv gs://${BUCKET_NAME}
+gsutil cp src/main/resources/data/shard-003.csv gs://${BUCKET_NAME}

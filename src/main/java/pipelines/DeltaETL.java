@@ -11,8 +11,12 @@ import org.apache.beam.sdk.coders.Coder;
 import org.apache.beam.sdk.coders.StringUtf8Coder;
 import org.apache.beam.sdk.io.gcp.bigquery.TableRowJsonCoder;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
-import org.apache.beam.sdk.transforms.ParDo;
-import org.apache.beam.sdk.transforms.SimpleFunction;
+import org.apache.beam.sdk.transforms.*;
+import org.apache.beam.sdk.transforms.windowing.*;
+import org.apache.beam.sdk.values.KV;
+import org.apache.beam.sdk.values.PCollection;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pipelines.config.DeltaETLPipelineOptions;
@@ -68,6 +72,13 @@ public class DeltaETL {
                         new CSVFileToJSONConverter(",")))
                             .setCoder(FailSafeElementCoder.of(StringUtf8Coder.of(), StringUtf8Coder.of()))
 
+                // Add deduplication strategy
+                .apply("KeyElements", WithKeys.of(new MD5KeyElements()))
+                .apply("AssignSessionWindow", Window.into(
+                        Sessions.withGapDuration(Duration.standardSeconds(options.getDeduplicationIntervalSeconds()))))
+                .apply(GroupByKey.create())
+                .apply(MapElements.via(new OutputFirst<>()))
+
                 // Write elements to BigQuery
                 .apply("WriteToBigQuery",
                         new WriteJSONToBigQuery<>(
@@ -80,6 +91,24 @@ public class DeltaETL {
         pipeline.run();
     }
 
+    private static class OutputFirst<KeyT, ValueT> extends SimpleFunction<KV<KeyT, Iterable<ValueT>>, ValueT> {
+        @Override
+        public ValueT apply(KV<KeyT, Iterable<ValueT>> input) {
+            for(ValueT value: input.getValue()) {
+                return value;
+            }
+
+            return null; // Should not happen technically, as elements are data driven (i.e., window should contain atleast a single element)
+        }
+    }
+
+    private static class MD5KeyElements implements SerializableFunction<FailSafeElement<String, String>, String> {
+
+        @Override
+        public String apply(FailSafeElement<String, String> input) {
+            return DigestUtils.md5Hex(input.getPayload());
+        }
+    }
 
     // Cut some corners with this one, normally an intermediate transform should be
     // responsible for the conversion/validation, and invalid events should be routed to a
