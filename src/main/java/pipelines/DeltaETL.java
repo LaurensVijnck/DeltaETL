@@ -110,6 +110,7 @@ public class DeltaETL {
 
         @Override
         public String apply(FailSafeElement<String, String> input) {
+            // Depending on the use-case, you could choose to exclude certain attributes from the hashing.
             return DigestUtils.md5Hex(input.getPayload());
         }
     }
