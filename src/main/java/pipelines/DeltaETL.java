@@ -14,7 +14,6 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.*;
 import org.apache.beam.sdk.transforms.windowing.*;
 import org.apache.beam.sdk.values.KV;
-import org.apache.beam.sdk.values.PCollection;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
@@ -41,6 +40,10 @@ import java.nio.charset.StandardCharsets;
  * The pipeline guarantees that each input file will be processed
  * exactly once by the use of a GCS-based locking strategy. Re-playing the input data
  * can be accomplished by supplying a new {@code MutexDirectory} in the {@link DeltaETLPipelineOptions}.
+ *
+ * UPDATE: After the discussion, it became apparent that per-element deduplication of the input
+ * files was requested. As I quick test, I decided to add the mechanism based on a session-windowing. This guarantees
+ * deduplication of events within the interval specified in the {@link DeltaETLPipelineOptions}.
  */
 public class DeltaETL {
 
@@ -75,7 +78,8 @@ public class DeltaETL {
                 // Add deduplication strategy
                 .apply("KeyElements", WithKeys.of(new MD5KeyElements()))
                 .apply("AssignSessionWindow", Window.into(
-                        Sessions.withGapDuration(Duration.standardSeconds(options.getDeduplicationIntervalSeconds()))))
+                        Sessions.withGapDuration(
+                                Duration.standardSeconds(options.getDeduplicationIntervalSeconds()))))
                 .apply(GroupByKey.create())
                 .apply(MapElements.via(new OutputFirst<>()))
 
